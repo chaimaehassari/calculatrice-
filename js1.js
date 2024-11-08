@@ -1,52 +1,83 @@
-let valInitial='0';
-let enCours='';
-let operateur='';
+let valInitial = '0'; 
+let enCours = ''; 
+let operateur = '';
 
-const display=document.getElementById("display").ariaValueMax;
+const display = document.getElementById("display");
 
-function ajouterValeur(value){
-    if(valInitial==='0' && value!='.'){
-        valInitial=value;
+function ajouterValeur(value) {
+    if (valInitial === '0' && value !== '.') {
+        valInitial = value; 
+    } else {
+        valInitial += value; 
     }
-    else{
-        valInitial+=value;
-    }
-    display.value= valInitial;
-}
-function afficherValue(){
-    alInitial='0';
-    enCours='';
-    operateur='';
-    
-    display.value= valInitial;
+    display.value = valInitial;
 }
 
-function calcule(){
-    num1=parseFloat(valInitial);
-    num2=parseFloat(enCours);
-    switch(operateur){
+function reset() {
+    valInitial = '0';
+    enCours = '';
+    operateur = '';
+    display.value = valInitial;
+}
+
+function calcule() {
+    const num1 = parseFloat(valInitial);
+    const num2 = parseFloat(enCours);
+
+    switch (operateur) {
         case '+':
-            valInitial=(num2+num1).toString();
+            valInitial = (num2 + num1).toString();
             break;
         case '-':
-            valInitial=(num2-num1).toString();
+            valInitial = (num2 - num1).toString();
             break;
         case '*':
-            valInitial=(num2*num1).toString();
+            valInitial = (num2 * num1).toString();
+            break;
         case '/':
             if (num1 !== 0) {
-                valInitialt = (num2 / num1).toString();
+                valInitial = (num2 / num1).toString();
             } else {
-                valInitialt = 'Erreur'; 
+                valInitial = 'Erreur';
             }
             break;
         default:
-            return;     
+            return;
     }
-    display.value =  valInitial;
+
+    display.value = valInitial;
     operateur = ''; 
-    enCours = '';
+    enCours = ''; 
 }
-function setoperateur(op){
-    enCours=''
+
+function setOperateur(op) {
+    if (enCours === '') {
+        enCours = valInitial; 
+    }
+    operateur = op;
+    valInitial = ''; 
 }
+
+document.querySelectorAll('button').forEach(button => {
+    button.addEventListener('click', function() {
+        const value = this.textContent;
+
+        switch(value) {
+            case "=":
+                calcule();
+                break;
+            case "C":
+                reset();
+                break;
+            case "+":
+            case "-":
+            case "*":
+            case "/":
+                setOperateur(value);
+                break;
+            default:
+                ajouterValeur(value);
+                break;
+        }
+    });
+});
